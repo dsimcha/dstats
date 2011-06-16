@@ -1,0 +1,13 @@
+MODULES = 
+	$(MODULE dstats.all)
+	$(MODULE dstats.alloc)
+	$(MODULE dstats.base)
+	$(MODULE dstats.cor)
+	$(MODULE dstats.distrib)
+	$(MODULE dstats.gamma)
+	$(MODULE dstats.infotheory)
+	$(MODULE dstats.random)
+	$(MODULE dstats.sort)
+	$(MODULE dstats.summary)
+	$(MODULE dstats.tests)
+
