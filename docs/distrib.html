@@ -935,6 +935,36 @@ Returns the sum of the terms 0 through <span class="funcparam">k</span> of the n
 
 <script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">double 
+<span class="currsymbol">dirichletPDF</span>
+<script>explorer.outline.addDecl('dirichletPDF');</script>
+
+(X, A)(X <span class="funcparam">x</span>, A <span class="funcparam">alpha</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>The Dirichlet probability density.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">x</td>
+
+               
+<td>An input range of observed values.  All must be between [0, 1].  They
+must also sum to 1, though this is not checked because small deviations from
+this may result due to numerical error.</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">alpha</td>
+
+               
+<td>A forward range of parameters.  This must have the same length as
+x.</td></tr>
+</table><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">double 
 <span class="currsymbol">cauchyPDF</span>
 <script>explorer.outline.addDecl('cauchyPDF');</script>
 
@@ -1063,7 +1093,7 @@ Returns the sum of the terms 0 through <span class="funcparam">k</span> of the n
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed May 25 22:15:54 2011
+			on Thu Aug 18 21:40:07 2011
 
 		</td></tr>
 	</table>

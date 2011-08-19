@@ -350,7 +350,7 @@ While the general convention of this library is to try to avoid
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">T 
+<dt><span class="decl">pure nothrow T 
 <span class="currsymbol">sign</span>
 <script>explorer.outline.addDecl('sign');</script>
 
@@ -484,11 +484,8 @@ Only supports iterating over up to size_t.max permutations.
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">template 
-<span class="currsymbol">__ctor</span>
-<script>explorer.outline.addDecl('__ctor');</script>
-
-(U) if (isForwardRange!(U))</span></dt>
+<dt><span class="decl">auto this(U)(U <span class="funcparam">input</span>);
+</span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
@@ -645,34 +642,26 @@ Only supports iterating over up to size_t.max combinations.
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">
-<span class="currsymbol">__ctor</span>
-<script>explorer.outline.addDecl('__ctor');</script>
-
-;
+<dt><span class="decl">auto this(uint <span class="funcparam">n</span>, uint <span class="funcparam">r</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Ctor to generate all possible combinations of array indices for a length r
+<dd>Ctor to generate all possible combinations of array indices for a length <span class="funcparam">r</span>
  array.  This is a special-case optimization and is faster than simply
- using the other ctor to generate all length r combinations from
+ using the other ctor to generate all length <span class="funcparam">r</span> combinations from
  seq(0, length).<br><br>
 
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">
-<span class="currsymbol">__ctor</span>
-<script>explorer.outline.addDecl('__ctor');</script>
-
-;
+<dt><span class="decl">auto this(T[] <span class="funcparam">array</span>, uint <span class="funcparam">r</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>General ctor.  array is a sequence from which to generate the
- combinations.  r is the length of the combinations to be generated.<br><br>
+<dd>General ctor.  <span class="funcparam">array</span> is a sequence from which to generate the
+ combinations.  <span class="funcparam">r</span> is the length of the combinations to be generated.<br><br>
 
 </dd>
 
@@ -806,7 +795,7 @@ The reason this struct doesn't have length or random access,
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed May 25 22:15:54 2011
+			on Thu Aug 18 21:40:07 2011
 
 		</td></tr>
 	</table>
