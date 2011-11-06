@@ -167,7 +167,7 @@ This implementation places removed nodes on an internal free list and
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(size_t <span class="funcparam">nElem</span>, RegionAllocator <span class="funcparam">alloc</span>);
+<dt><span class="decl">this(size_t <span class="funcparam">nElem</span>, RegionAllocator <span class="funcparam">alloc</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -335,7 +335,7 @@ This implementation places removed nodes on an internal free list and
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(size_t <span class="funcparam">nElem</span>, RegionAllocator <span class="funcparam">alloc</span>);
+<dt><span class="decl">this(size_t <span class="funcparam">nElem</span>, RegionAllocator <span class="funcparam">alloc</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -498,7 +498,7 @@ This implementation places removed nodes on an internal free list and
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(RegionAllocator <span class="funcparam">alloc</span>);
+<dt><span class="decl">this(RegionAllocator <span class="funcparam">alloc</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -679,7 +679,7 @@ Uses opApply instead of the more flexible ranges, because I
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(RegionAllocator <span class="funcparam">alloc</span>);
+<dt><span class="decl">this(RegionAllocator <span class="funcparam">alloc</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -930,7 +930,7 @@ holds a copy of the  instance it uses.
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">this(size_t <span class="funcparam">segmentSize</span>, GCScan <span class="funcparam">shouldScan</span>);
+<dt><span class="decl">this(uint <span class="funcparam">segmentSize</span>, GCScan <span class="funcparam">shouldScan</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -1019,7 +1019,7 @@ recommended, as it will cause too many <b>false</b> pointers.  (See  for details
 The setter is only effective before the global function
  has been called for the first time in the current
 thread.  Attempts to set this property after the first call to this
-function from the current thread throw an .<br><br>
+function from the current thread throw a .<br><br>
 
 </dd>
 
@@ -1060,7 +1060,7 @@ a function.  However, any attempt to call a method will result in a
     <font color=blue>auto</font> ptr1 = bar(alloc);
     <font color=blue>auto</font> ptr2 = alloc.allocate(42);
 
-    <font color=green>// The last instance of the region allocator used to allocate ptr1
+    <font color=green>// The last copy of the RegionAllocator object used to allocate ptr1
 </font>    <font color=green>// and ptr2 is going out of scope here.  The memory pointed to by
 </font>    <font color=green>// both ptr1 and ptr2 will be freed.
 </font>}
@@ -1073,7 +1073,7 @@ a function.  However, any attempt to call a method will result in a
 
     <font color=green>// ptr3 was allocated using alloc2, which is going out of scope.
 </font>    <font color=green>// Its memory will therefore be freed.  ret was allocated using alloc.
-</font>    <font color=green>// An instance of this RegionAllocator is still alive in foo() after
+</font>    <font color=green>// A copy of this RegionAllocator is still alive in foo() after
 </font>    <font color=green>// bar() executes.  Therefore, ret will not be freed on returning and
 </font>    <font color=green>// is still valid after bar() returns.
 </font>
@@ -1116,7 +1116,18 @@ a function.  However, any attempt to call a method will result in a
     <font color=blue>auto</font> ptr4 = alloc.allocate(42);  <font color=green>// Ok.
 </font>}
 </pre>
+
 <br><br>
+<b>Note:</b><br>
+Allocations larger than  are handled as a special
+case and fall back to allocating directly from the C heap.  These large
+allocations are freed as if they were allocated on a 
+when  or  is called or the last copy of a
+ instance goes out of scope.  However, due to the extra
+bookkeeping required, destroying a region (as happens when the last copy of
+a  instance goes out of scope) will require time linear
+instead of constant in the number of allocations for regions where these
+large allocations are present.<br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -1136,7 +1147,12 @@ a function.  However, any attempt to call a method will result in a
      instance can be freed by calling
      or  or will be
     automatically freed when the last copy of this 
-    instance goes out of scope.<br><br>
+    instance goes out of scope.
+<br><br>
+Allocation requests larger than  are
+    allocated directly on the C heap, are scanned by the GC iff
+    the  instance that this object uses is scanned by
+    the GC, and are freed according to the same rules as described above.<br><br>
 
 </dd>
 
@@ -1171,6 +1187,33 @@ a function.  However, any attempt to call a method will result in a
      then calls .  Throws a
      if the pointer does not point to the
     block that would be freed by .<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">bool 
+<span class="currsymbol">resize</span>
+<script>explorer.outline.addDecl('resize');</script>
+
+(const(void)* <span class="funcparam">ptr</span>, size_t <span class="funcparam">newSize</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Attempts to 
+<span class="currsymbol">resize</span>
+<script>explorer.outline.addDecl('resize');</script>
+
+ a previously allocated block of memory in place.
+    This is possible only if  points to the beginning of the last
+    block allocated by this  instance and, in the
+    case where  is greater than the old size, there is
+    additional space in the segment that  was allocated from.
+    Additionally, blocks larger than this 's segment size
+    cannot be grown or shrunk.
+<br><br>
+<b>Returns:</b><br>
+True if the block was successfully resized, <b>false</b> otherwise.<br><br>
 
 </dd>
 
@@ -1228,21 +1271,6 @@ a function.  However, any attempt to call a method will result in a
 
 <dd>Same as , except skips initialization of elements for
     performance reasons.<br><br>
-
-</dd>
-
-<script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">static bool 
-<span class="currsymbol">resize</span>
-<script>explorer.outline.addDecl('resize');</script>
-
-(void* <span class="funcparam">p</span>, size_t <span class="funcparam">newSize</span>);
-</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd>Dummy implementation for compatibility with allocator interface.
-    Always returns <b>false</b>.<br><br>
 
 </dd>
 
@@ -1332,7 +1360,8 @@ a function.  However, any attempt to call a method will result in a
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Returns the segment size of this .<br><br>
+<dd>Returns the segment size of the  used by this
+    .<br><br>
 
 </dd>
 
@@ -1458,7 +1487,7 @@ The most common reason to call  on a builtin
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Aug 18 21:40:07 2011
+			on Sun Nov  6 11:27:30 2011
 
 		</td></tr>
 	</table>

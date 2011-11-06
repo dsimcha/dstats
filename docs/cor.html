@@ -275,24 +275,50 @@ Computing Higher-Order Moments Online.
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Kendall's Tau-b, O(N log N) version.  This can be defined in terms of the
- bubble sort distance, or the number of swaps that would be needed in a
- bubble sort to sort input2 into the same order as input1.  It is
- a robust, non-parametric correlation metric.
+<dd>Kendall's Tau-b, O(N log N) version.  This is a non-parametric measure
+of monotonic association and can be defined in terms of the
+bubble sort distance, or the number of swaps that would be needed in a
+bubble sort to sort input2 into the same order as input1.
 <br><br>
 Since a copy of the inputs is made anyhow because they need to be sorted,
- this function can work with any input range.  However, the ranges must
- have the same length.
+this function can work with any input range.  However, the ranges must
+have the same length.
+
+<br><br>
+<b>Note:</b><br>
+As an optimization, when a range is a SortedRange with predicate "a &lt; b",
+it is assumed already sorted and not sorted a second time by this function.
+This is useful when applying this function multiple times with one of the
+arguments the same every time:
+<br><br>
+
+<pre class="d_code"><font color=blue>auto</font> lhs = randArray!rNorm(1_000, 0, 1);
+<font color=blue>auto</font> indices = <font color=blue>new</font> size_t[1_000];
+makeIndex(lhs, indices);
+
+<font color=blue>foreach</font>(i; 0..1_000) {
+    <font color=blue>auto</font> rhs = randArray!rNorm(1_000, 0, 1);
+    <font color=blue>auto</font> lhsSorted = assumeSorted(
+        indexed(lhs, indices)
+    );
+
+    <font color=green>// Rearrange rhs according to the sorting permutation of lhs.
+</font>    <font color=green>// kendallCor(lhsSorted, rhsRearranged) will be much faster than
+</font>    <font color=green>// kendallCor(lhs, rhs).
+</font>    <font color=blue>auto</font> rhsRearranged = indexed(rhs, indices);
+    <font color=blue>assert</font>(<u>kendallCor</u>(lhsSorted, rhsRearranged) == <u>kendallCor</u>(lhs, rhs));
+}
+</pre>
 
 <br><br>
 <b>References:</b><br>
 A Computer Method for Calculating Kendall's Tau with Ungrouped Data,
- William R. Knight, Journal of the American Statistical Association, Vol.
- 61, No. 314, Part 1 (Jun., 1966), pp. 436-439
+William R. Knight, Journal of the American Statistical Association, Vol.
+61, No. 314, Part 1 (Jun., 1966), pp. 436-439
 <br><br>
 
- The Variance of Tau When Both Rankings Contain Ties.  M.G. Kendall.
- Biometrika, Vol 34, No. 3/4 (Dec., 1947), pp. 297-298<br><br>
+The Variance of Tau When Both Rankings Contain Ties.  M.G. Kendall.
+Biometrika, Vol 34, No. 3/4 (Dec., 1947), pp. 297-298<br><br>
 
 </dd>
 
@@ -301,14 +327,15 @@ A Computer Method for Calculating Kendall's Tau with Ungrouped Data,
 <span class="currsymbol">kendallCorDestructive</span>
 <script>explorer.outline.addDecl('kendallCorDestructive');</script>
 
-(T, U)(T[] <span class="funcparam">input1</span>, U[] <span class="funcparam">input2</span>);
+(R1, R2)(R1 <span class="funcparam">input1</span>, R2 <span class="funcparam">input2</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Kendall's Tau-b O(N log N), overwrites input arrays with undefined data but
- uses only O(log N) stack space for sorting, not O(N) space to duplicate
- input.  Only works on arrays.<br><br>
+uses only O(log N) stack space for sorting, not O(N) space to duplicate
+input.  R1 and R2 must be either SortedRange structs with the default predicate
+or arrays.<br><br>
 
 </dd>
 
@@ -358,7 +385,7 @@ cor is the correlation metric to use.  It can be either pearsonCor,
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Aug 18 21:40:07 2011
+			on Sun Nov  6 11:27:30 2011
 
 		</td></tr>
 	</table>

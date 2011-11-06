@@ -32,6 +32,20 @@ David Simcha<br><br>
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">class 
+<span class="currsymbol">DstatsArgumentException</span>
+<script>explorer.outline.addDecl('DstatsArgumentException');</script>
+
+: object.Exception;
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>This is the exception that is thrown on invalid arguments to a dstats function.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">template 
 <span class="currsymbol">doubleInput</span>
 <script>explorer.outline.addDecl('doubleInput');</script>
@@ -41,22 +55,7 @@ David Simcha<br><br>
 
 
 <dd>Tests whether T is an input range whose elements can be implicitly
- converted to doubles.<br><br>
-
-</dd>
-
-<script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">template 
-<span class="currsymbol">IterType</span>
-<script>explorer.outline.addDecl('IterType');</script>
-
-(T)</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd>Determine the iterable type of any iterable object, regardless of whether
- it uses ranges, opApply, etc.  This is typeof(elem) if one does
- foreach(elem; T.init) {}.<br><br>
+converted to doubles.<br><br>
 
 </dd>
 
@@ -75,23 +74,6 @@ David Simcha<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">O 
-<span class="currsymbol">mate</span>
-<script>explorer.outline.addDecl('mate');</script>
-
-(I, O)(I <span class="funcparam">input</span>, O <span class="funcparam">output</span>);
-</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd>Writes the contents of an input range to an output range.
-<br><br>
-<b>Returns:</b><br>
-The output range.<br><br>
-
-</dd>
-
-<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">Tuple!(T) 
 <span class="currsymbol">saveAll</span>
 <script>explorer.outline.addDecl('saveAll');</script>
@@ -102,7 +84,7 @@ The output range.<br><br>
 
 
 <dd>Given a tuple possibly containing forward ranges, returns a tuple where
- save() has been called on all forward ranges.<br><br>
+save() has been called on all forward ranges.<br><br>
 
 </dd>
 
@@ -118,8 +100,7 @@ The output range.<br><br>
 
 <dd>Bins data into nbin equal width bins, indexed from
  0 to nbin - 1, with 0 being the smallest bin, etc.
- The values returned are the counts for each bin.  Returns results on the GC
- heap by default, but uses TempAlloc stack if alloc == Alloc.STACK.
+ The values returned are the counts for each bin.
 <br><br>
 Works with any forward range with elements implicitly convertible to double.<br><br>
 
@@ -255,7 +236,7 @@ Works with any input range.
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">uint[IterType!(T)] 
+<dt><span class="decl">uint[ForeachType!(T)] 
 <span class="currsymbol">frequency</span>
 <script>explorer.outline.addDecl('frequency');</script>
 
@@ -264,7 +245,8 @@ Works with any input range.
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Returns an AA of counts of every element in input.  Works w/ any iterable.
+<dd>Returns an associative array of counts of every element in input.
+ Works w/ any iterable.
 <br><br>
 <b>Examples:</b><br>
 <pre class="d_code"> <font color=blue>int</font>[] foo = [1,2,3,1,2,4];
@@ -390,93 +372,49 @@ While the general convention of this library is to try to avoid
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">enum 
-<span class="currsymbol">Buffer</span>
-<script>explorer.outline.addDecl('Buffer');</script>
-
-;
-</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd>Controls whether Perm and Comb duplicate their buffer on each iteration and
- return the copy, or recycle it and return an alias of it.
- You want to choose recycle if each permutation/combination
- will only be needed within the scope of the foreach statement.  If they
- may escape this scope, you want to choose dup.  The default is dup,
- because it's safer, but recycle can avoid lots of unnecessary GC activity.<br><br>
-
-
-<script>explorer.outline.incSymbolLevel();</script>
-<dl>
-<script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">
-<span class="currsymbol">dup</span>
-<script>explorer.outline.addDecl('dup');</script>
-
-</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd><br><br>
-</dd>
-
-<script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">
-<span class="currsymbol">recycle</span>
-<script>explorer.outline.addDecl('recycle');</script>
-
-</span></dt>
-<script>explorer.outline.writeEnabled = false;</script>
-
-
-<dd><br><br>
-</dd>
-</dl>
-<script>explorer.outline.decSymbolLevel();</script>
-
-
-</dd>
-
-<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">struct 
 <span class="currsymbol">Perm</span>
 <script>explorer.outline.addDecl('Perm');</script>
 
-(Buffer bufType = Buffer.dup,T);
+(T);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>A struct that generates all possible permutations of a sequence.
 <br><br>
-<b>Note:</b><br>
+<b>Notes:</b><br>
 Permutations are output in undefined order.
+<br><br>
+
+The array returned by front is recycled across iterations.  To preserve
+it across iterations, wrap this range using map!"a.dup" or
+map!"a.idup".
 
 <br><br>
 <font color=red>BUGS:</font><br>
 Only supports iterating over up to size_t.max permutations.
- This means the max permutation length is 12 on 32-bit machines, or 20
- on 64-bit.  This was a conscious tradeoff to allow this range to have a
- length of type size_t, since iterating over such huge permutation spaces
- would be insanely slow anyhow.
+This means the max permutation length is 12 on 32-bit machines, or 20
+on 64-bit.  This was a conscious tradeoff to allow this range to have a
+length of type size_t, since iterating over such huge permutation spaces
+would be insanely slow anyhow.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">  <font color=blue>double</font>[][] res;
-  <font color=blue>auto</font> perm = <u>Perm</u>!(<font color=blue>double</font>)([1.0, 2.0, 3.0][]);
-  <font color=blue>foreach</font>(p; perm) {
-      res ~= p;
-  }
+<pre class="d_code"><font color=blue>double</font>[][] res;
+<font color=blue>auto</font> perm = map!<font color=red>"a.dup"</font>(<u>Perm</u>!(<font color=blue>double</font>)([1.0, 2.0, 3.0][]));
+<font color=blue>foreach</font>(p; perm) {
+     res ~= p;
+}
 
-  sort(res);
-  <font color=blue>assert</font>(res.canFindSorted([1.0, 2.0, 3.0]));
-  <font color=blue>assert</font>(res.canFindSorted([1.0, 3.0, 2.0]));
-  <font color=blue>assert</font>(res.canFindSorted([2.0, 1.0, 3.0]));
-  <font color=blue>assert</font>(res.canFindSorted([2.0, 3.0, 1.0]));
-  <font color=blue>assert</font>(res.canFindSorted([3.0, 1.0, 2.0]));
-  <font color=blue>assert</font>(res.canFindSorted([3.0, 2.0, 1.0]));
-  <font color=blue>assert</font>(res.length == 6);
+<font color=blue>auto</font> sorted = sort(res);
+<font color=blue>assert</font>(sorted.canFind([1.0, 2.0, 3.0]));
+<font color=blue>assert</font>(sorted.canFind([1.0, 3.0, 2.0]));
+<font color=blue>assert</font>(sorted.canFind([2.0, 1.0, 3.0]));
+<font color=blue>assert</font>(sorted.canFind([2.0, 3.0, 1.0]));
+<font color=blue>assert</font>(sorted.canFind([3.0, 1.0, 2.0]));
+<font color=blue>assert</font>(sorted.canFind([3.0, 2.0, 1.0]));
+<font color=blue>assert</font>(sorted.length == 6);
 </pre>
 <br><br>
 
@@ -484,7 +422,7 @@ Only supports iterating over up to size_t.max permutations.
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(U)(U <span class="funcparam">input</span>);
+<dt><span class="decl">this(U)(U <span class="funcparam">input</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -496,7 +434,7 @@ Only supports iterating over up to size_t.max permutations.
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">PermArray 
+<dt><span class="decl">const(T)[] 
 <span class="currsymbol">front</span>
 <script>explorer.outline.addDecl('front');</script>
 
@@ -505,9 +443,9 @@ Only supports iterating over up to size_t.max permutations.
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd><b>Note:</b><br>
-PermArray is just an alias to either T[] or const(T)[],
- depending on whether bufType == Buf.dup or Buf.recycle.<br><br>
+<dd>Returns the current permutation.  The array is const because it is
+    recycled across iterations and modifying it would destroy the state of
+    the permutation generator.<br><br>
 
 </dd>
 
@@ -521,7 +459,8 @@ PermArray is just an alias to either T[] or const(T)[],
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Get the next permutation in the sequence.<br><br>
+<dd>Get the next permutation in the sequence.  This will overwrite the
+    contents of the array returned by the last call to front.<br><br>
 
 </dd>
 
@@ -571,26 +510,21 @@ PermArray is just an alias to either T[] or const(T)[],
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">PermRet!(bufType,T) 
+<dt><span class="decl">auto 
 <span class="currsymbol">perm</span>
 <script>explorer.outline.addDecl('perm');</script>
 
-(Buffer bufType = Buffer.dup, T...)(T <span class="funcparam">stuff</span>);
+(T...)(T <span class="funcparam">stuff</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Create a Perm struct from a range or of a set of bounds.
 <br><br>
-<b>Note:</b><br>
-PermRet is just a template to figure out what this should return.
- I would use auto if not for bug 2251.
-
-<br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>auto</font> p = <u>perm</u>([1,2,3]);  <font color=green>// All permutations of [1,2,3].
-</font> <font color=blue>auto</font> p = <u>perm</u>(5);  <font color=green>// All permutations of [0,1,2,3,4].
-</font> <font color=blue>auto</font> p = <u>perm</u>(-1, 2); <font color=green>// All permutations of [-1, 0, 1].
+<pre class="d_code"><font color=blue>auto</font> p = <u>perm</u>([1,2,3]);  <font color=green>// All permutations of [1,2,3].
+</font><font color=blue>auto</font> p = <u>perm</u>(5);  <font color=green>// All permutations of [0,1,2,3,4].
+</font><font color=blue>auto</font> p = <u>perm</u>(-1, 2); <font color=green>// All permutations of [-1, 0, 1].
 </font></pre>
 <br><br>
 
@@ -601,40 +535,45 @@ PermRet is just a template to figure out what this should return.
 <span class="currsymbol">Comb</span>
 <script>explorer.outline.addDecl('Comb');</script>
 
-(T,Buffer bufType = Buffer.dup);
+(T);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Generates every possible combination of r elements of the given sequence, or r
- array indices from zero to N, depending on which ctor is called.  Uses
- an input range interface.
+<dd>Generates every possible combination of r elements of the given sequence, or
+array indices from zero to N, depending on which c'tor is called.  Uses
+an input range interface.
+<br><br>
+<b>Note:</b><br>
+The buffer that is returned by front is recycled across iterations.
+To duplicate it instead, use map!"a.dup" or map!"a.idup".
+
 <br><br>
 <font color=red>BUGS:</font><br>
 Only supports iterating over up to size_t.max combinations.
- This was a conscious tradeoff to allow this range to have a
- length of type size_t, since iterating over such huge combination spaces
- would be insanely slow anyhow.
+This was a conscious tradeoff to allow this range to have a
+length of type size_t, since iterating over such huge combination spaces
+would be insanely slow anyhow.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">    <font color=blue>auto</font> comb1 = <u>Comb</u>!(<font color=blue>uint</font>)(5, 2);
-    <font color=blue>uint</font>[][] vals;
-    <font color=blue>foreach</font>(c; comb1) {
-        vals ~= c;
-    }
-    sort(vals);
-    <font color=blue>assert</font>(vals.canFindSorted([0u,1].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([0u,2].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([0u,3].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([0u,4].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([1u,2].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([1u,3].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([1u,4].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([2u,3].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([2u,4].dup));
-    <font color=blue>assert</font>(vals.canFindSorted([3u,4].dup));
-    <font color=blue>assert</font>(vals.length == 10);
+<pre class="d_code"><font color=blue>auto</font> comb1 = map!<font color=red>"a.dup"</font>(<u>Comb</u>!(<font color=blue>uint</font>)(5, 2));
+<font color=blue>uint</font>[][] vals;
+<font color=blue>foreach</font>(c; comb1) {
+    vals ~= c;
+}
+<font color=blue>auto</font> sorted = sort(vals);
+<font color=blue>assert</font>(sorted.canFind([0u,1]));
+<font color=blue>assert</font>(sorted.canFind([0u,2]));
+<font color=blue>assert</font>(sorted.canFind([0u,3]));
+<font color=blue>assert</font>(sorted.canFind([0u,4]));
+<font color=blue>assert</font>(sorted.canFind([1u,2]));
+<font color=blue>assert</font>(sorted.canFind([1u,3]));
+<font color=blue>assert</font>(sorted.canFind([1u,4]));
+<font color=blue>assert</font>(sorted.canFind([2u,3]));
+<font color=blue>assert</font>(sorted.canFind([2u,4]));
+<font color=blue>assert</font>(sorted.canFind([3u,4]));
+<font color=blue>assert</font>(sorted.length == 10);
 </pre>
 <br><br>
 
@@ -642,26 +581,59 @@ Only supports iterating over up to size_t.max combinations.
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(uint <span class="funcparam">n</span>, uint <span class="funcparam">r</span>);
+<dt><span class="decl">this(uint <span class="funcparam">n</span>, uint <span class="funcparam">r</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Ctor to generate all possible combinations of array indices for a length <span class="funcparam">r</span>
- array.  This is a special-case optimization and is faster than simply
- using the other ctor to generate all length <span class="funcparam">r</span> combinations from
- seq(0, length).<br><br>
+    array.  This is a special-case optimization and is faster than simply
+    using the other ctor to generate all length <span class="funcparam">r</span> combinations from
+    seq(0, length).
+<br><br>
+For efficiency, uint is used instead of size_t since, on a 64-bit system,
+    generating all possible combinations of an array bigger than uint.max
+    wouldn't be feasible anyhow.<br><br>
 
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">auto this(T[] <span class="funcparam">array</span>, uint <span class="funcparam">r</span>);
+<dt><span class="decl">this(T[] <span class="funcparam">array</span>, uint <span class="funcparam">r</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>General ctor.  <span class="funcparam">array</span> is a sequence from which to generate the
  combinations.  <span class="funcparam">r</span> is the length of the combinations to be generated.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const(T)[] 
+<span class="currsymbol">front</span>
+<script>explorer.outline.addDecl('front');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Gets the current combination.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">popFront</span>
+<script>explorer.outline.addDecl('popFront');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Advances to the next combination.  The array returned by front will be
+    overwritten with the new results.<br><br>
 
 </dd>
 
@@ -710,21 +682,16 @@ Only supports iterating over up to size_t.max combinations.
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">CombRet!(T,bufType) 
+<dt><span class="decl">auto 
 <span class="currsymbol">comb</span>
 <script>explorer.outline.addDecl('comb');</script>
 
-(Buffer bufType = Buffer.dup, T)(T <span class="funcparam">stuff</span>, uint <span class="funcparam">r</span>);
+(T)(T <span class="funcparam">stuff</span>, uint <span class="funcparam">r</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Create a Comb struct from a range or of a set of bounds.
-<br><br>
-<b>Note:</b><br>
-CombRet is just a template to figure out what this should return.
- I would use auto if not for bug 2251.
-
 <br><br>
 <b>Examples:</b><br>
 <pre class="d_code"> <font color=blue>auto</font> c1 = <u>comb</u>([1,2,3], 2);  <font color=green>// Any two elements from [1,2,3].
@@ -795,7 +762,7 @@ The reason this struct doesn't have length or random access,
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Aug 18 21:40:07 2011
+			on Sun Nov  6 11:27:30 2011
 
 		</td></tr>
 	</table>

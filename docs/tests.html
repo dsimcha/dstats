@@ -86,7 +86,7 @@ David Simcha<br><br>
 
 
 <dd>Skip P-value computation (and confidence intervals if applicable)
- and just return the test statistic.<br><br>
+    and just return the test statistic.<br><br>
 
 </dd>
 </dl>
@@ -168,8 +168,8 @@ David Simcha<br><br>
 
 
 <dd>A plain old data struct for returning the results of hypothesis tests
- that also produce confidence intervals.  Contains, can implicitly convert
- to, a TestRes.<br><br>
+that also produce confidence intervals.  Contains, can implicitly convert
+to, a TestRes.<br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -184,7 +184,8 @@ David Simcha<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd><br><br>
+<dd>This is alias this'd.<br><br>
+
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
@@ -243,8 +244,8 @@ David Simcha<br><br>
 
 
 <dd>Tests whether a struct/class has the necessary information for calculating
- a T-test.  It must have a property .mean (mean), .stdev (stdandard deviation),
- .var (variance), and .N (sample size).<br><br>
+a T-test.  It must have a property .mean (mean), .stdev (stdandard deviation),
+.var (variance), and .N (sample size).<br><br>
 
 </dd>
 
@@ -286,7 +287,7 @@ data may be either an iterable with elements implicitly convertible to
 <br><br>
 <b>Returns:</b><br>
 A ConfInt containing T, the P-value and the boundaries of
- the confidence interval for mean(T) at the level specified.
+ the confidence interval for mean(data) at the level specified.
 
 <br><br>
 <b>References:</b><br>
@@ -307,19 +308,19 @@ A ConfInt containing T, the P-value and the boundaries of
 
 
 <dd>Two-sample T test for a difference in means,
- assumes variances of samples are equal.  Alteratives are Alt.less, meaning
- mean(sample1) - mean(sample2) &lt; testMean, Alt.greater, meaning
- mean(sample1) - mean(sample2) &gt; testMean, and Alt.twoSided, meaning
- mean(sample1) - mean(sample2) != testMean.
+assumes variances of samples are equal.  Alteratives are Alt.less, meaning
+mean(sample1) - mean(sample2) &lt; testMean, Alt.greater, meaning
+mean(sample1) - mean(sample2) &gt; testMean, and Alt.twoSided, meaning
+mean(sample1) - mean(sample2) != testMean.
 <br><br>
 sample1 and sample2 may be either iterables with elements implicitly
- convertible to double or summary structs (see isSummary).
+convertible to double or summary structs (see isSummary).
 
 <br><br>
 <b>Returns:</b><br>
 A ConfInt containing the T statistic, the P-value, and the
- boundaries of the confidence interval for the difference between means
- of sample1 and sample2 at the specified level.
+boundaries of the confidence interval for the difference between means
+of sample1 and sample2 at the specified level.
 
 <br><br>
 <b>References:</b><br>
@@ -339,19 +340,19 @@ A ConfInt containing the T statistic, the P-value, and the
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Two-sample T-test for difference in means.  Does NOT assume variances are equal.
- Alteratives are Alt.less, meaning mean(sample1) - mean(sample2) &lt; testMean,
- Alt.greater, meaning mean(sample1) - mean(sample2) &gt; testMean, and
- Alt.twoSided, meaning mean(sample1) - mean(sample2) != testMean.
+<dd>Two-sample T-test for difference in means.  Does not assume variances are equal.
+Alteratives are Alt.less, meaning mean(sample1) - mean(sample2) &lt; testMean,
+Alt.greater, meaning mean(sample1) - mean(sample2) &gt; testMean, and
+Alt.twoSided, meaning mean(sample1) - mean(sample2) != testMean.
 <br><br>
 sample1 and sample2 may be either iterables with elements implicitly
- convertible to double or summary structs (see isSummary).
+convertible to double or summary structs (see isSummary).
 
 <br><br>
 <b>Returns:</b><br>
 A ConfInt containing the T statistic, the P-value, and the
- boundaries of the confidence interval for the difference between means
- of sample1 and sample2 at the specified level.
+boundaries of the confidence interval for the difference between means
+of sample1 and sample2 at the specified level.
 
 <br><br>
 <b>References:</b><br>
@@ -372,20 +373,20 @@ A ConfInt containing the T statistic, the P-value, and the
 
 
 <dd>Paired T test.  Tests the hypothesis that the mean difference between
- corresponding elements of before and after is testMean.  Alternatives are
- Alt.less, meaning the that the <b>true</b> mean difference (before[i] - after[i])
- is less than testMean, Alt.greater, meaning the <b>true</b> mean difference is
- greater than testMean, and Alt.twoSided, meaning the <b>true</b> mean difference is not
- equal to testMean.
+corresponding elements of before and after is testMean.  Alternatives are
+Alt.less, meaning the that the <b>true</b> mean difference (before[i] - after[i])
+is less than testMean, Alt.greater, meaning the <b>true</b> mean difference is
+greater than testMean, and Alt.twoSided, meaning the <b>true</b> mean difference is not
+equal to testMean.
 <br><br>
 before and after must be input ranges with elements implicitly convertible
- to double.
+to double and must have the same length.
 
 <br><br>
 <b>Returns:</b><br>
 A ConfInt containing the T statistic, the P-value, and the
- boundaries of the confidence interval for the mean difference between
- corresponding elements of sample1 and sample2 at the specified level.
+boundaries of the confidence interval for the mean difference between
+corresponding elements of sample1 and sample2 at the specified level.
 
 <br><br>
 <b>References:</b><br>
@@ -405,24 +406,26 @@ A ConfInt containing the T statistic, the P-value, and the
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Compute the test directly from summary statistics of the differences between
- corresponding samples.
+<dd>Compute a paired T test directly from summary statistics of the differences
+between corresponding samples.
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>float</font>[] data1 = getSomeDataSet();
- <font color=blue>float</font>[] data2 = getSomeOtherDataSet();
- <font color=blue>assert</font>(data1.length == data2.length);
+<pre class="d_code"><font color=blue>float</font>[] data1 = [8, 6, 7, 5, 3, 0, 9];
+<font color=blue>float</font>[] data2 = [3, 6, 2, 4, 3, 6, 8];
 
- <font color=green>// Calculate summary statistics on difference explicitly.
-</font> MeanSD summary;
- <font color=blue>foreach</font>(i; 0..data1.length) {
-     summary.put(data1[i] - data2[i]);
- }
+<font color=green>// Calculate summary statistics on difference explicitly.
+</font>MeanSD summary;
+<font color=blue>foreach</font>(i; 0..data1.length) {
+    summary.put(data1[i] - data2[i]);
+}
 
- <font color=green>// Test the null hypothesis that the mean difference between corresponding
-</font> <font color=green>// elements (data1[i] - data2[i]) is greater than 5 against the null that it
-</font> <font color=green>// is &lt;= 5.  Calculate confidence intervals at 99%.
-</font> <font color=blue>auto</font> result = <u>pairedTTest</u>(summary, 5, alt, 0.99);
+<font color=green>// Test the null hypothesis that the mean difference between corresponding
+</font><font color=green>// elements (data1[i] - data2[i]) is greater than 5 against the null that it
+</font><font color=green>// is &lt;= 5.  Calculate confidence intervals at 99%.
+</font><font color=blue>auto</font> result = <u>pairedTTest</u>(summary, 5, Alt.twoSided, 0.99);
+
+<font color=green>// This is equivalent to:
+</font><font color=blue>auto</font> result2 = <u>pairedTTest</u>(data1, data2, 5, Alt.twoSided, 0.99);
 </pre>
 
 <br><br>
@@ -444,27 +447,27 @@ A ConfInt containing the T statistic, the P-value, and the
 
 
 <dd>Tests the <b>null</b> hypothesis that the variances of all groups are equal against
- the alternative that heteroscedasticity exists.  data must be either a
- tuple of ranges or a range of ranges.  central is an alias for the measure
- of central tendency to be used.  This can be any function that maps a
- forward range of numeric types to a numeric type.  The commonly used ones
- are median (default) and mean (less robust).  Trimmed mean is sometimes
- useful, but is currently not implemented in dstats.summary.
+the alternative that heteroscedasticity exists.  data must be either a
+tuple of ranges or a range of ranges.  central is an alias for the measure
+of central tendency to be used.  This can be any function that maps a
+forward range of numeric types to a numeric type.  The commonly used ones
+are median (default) and mean (less robust).  Trimmed mean is sometimes
+useful, but is currently not implemented in dstats.summary.
 <br><br>
 <b>References:</b><br>
 Levene, Howard (1960). "Robust tests for equality of variances". in Ingram
- Olkin, Harold Hotelling et al. Contributions to Probability and Statistics:
- Essays in Honor of Harold Hotelling. Stanford University Press. pp. 278-292.
+Olkin, Harold Hotelling et al. Contributions to Probability and Statistics:
+Essays in Honor of Harold Hotelling. Stanford University Press. pp. 278-292.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>int</font>[] sample1 = [1,2,3,4,5];
- <font color=blue>int</font>[] sample2 = [100,200,300,400,500];
- <font color=blue>auto</font> result = <u>levenesTest</u>(sample1, sample2);
+<pre class="d_code"><font color=blue>int</font>[] sample1 = [1,2,3,4,5];
+<font color=blue>int</font>[] sample2 = [100,200,300,400,500];
+<font color=blue>auto</font> result = <u>levenesTest</u>(sample1, sample2);
 
- <font color=green>// Clearly the variances are different between these two samples.
-</font> <font color=blue>assert</font>( approxEqual(result.testStat, 10.08));
- <font color=blue>assert</font>( approxEqual(result.p, 0.01310));
+<font color=green>// Clearly the variances are different between these two samples.
+</font><font color=blue>assert</font>( approxEqual(result.testStat, 10.08));
+<font color=blue>assert</font>( approxEqual(result.p, 0.01310));
 </pre>
 <br><br>
 
@@ -481,24 +484,24 @@ Levene, Howard (1960). "Robust tests for equality of variances". in Ingram
 
 
 <dd>The F-test is a one-way ANOVA extension of the T-test to &gt;2 groups.
- It's useful when you have 3 or more groups with equal variance and want
- to test whether their means are equal.  Data can be input as either a
- tuple or a range.  This may contain any combination of ranges of numeric
- types, MeanSD structs and Summary structs.
+It's useful when you have 3 or more groups with equal variance and want
+to test whether their means are equal.  Data can be input as either a
+tuple or a range.  This may contain any combination of ranges of numeric
+types, MeanSD structs and Summary structs.
 <br><br>
 <b>Note:</b><br>
 This test makes the assumption that all groups have equal variances,
- also known as homoskedasticity.  For a similar test that does not make these
- assumptions, see welchAnova.
+also known as homoskedasticity.  For a similar test that does not make these
+assumptions, see welchAnova.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>uint</font>[] thing1 = [3,1,4,1],
-        thing2 = [5,9,2,6,5,3],
-        thing3 = [5,8,9,7,9,3];
- <font color=blue>auto</font> result = <u>fTest</u>(thing1, meanStdev(thing2), summary(thing3));
- <font color=blue>assert</font>(approxEqual(result.testStat, 4.9968));
- <font color=blue>assert</font>(approxEqual(result.p, 0.02456));
+<pre class="d_code"><font color=blue>uint</font>[] thing1 = [3,1,4,1],
+       thing2 = [5,9,2,6,5,3],
+       thing3 = [5,8,9,7,9,3];
+<font color=blue>auto</font> result = <u>fTest</u>(thing1, meanStdev(thing2), summary(thing3));
+<font color=blue>assert</font>(approxEqual(result.testStat, 4.9968));
+<font color=blue>assert</font>(approxEqual(result.p, 0.02456));
 </pre>
 
 <br><br>
@@ -510,8 +513,8 @@ This test makes the assumption that all groups have equal variances,
 <br><br>
 <b>Returns:</b><br>
 A TestRes containing the F statistic and the P-value for the alternative
- that the means of the groups are different against the <b>null</b> that they
- are identical.<br><br>
+that the means of the groups are different against the <b>null</b> that they
+are identical.<br><br>
 
 </dd>
 
@@ -526,11 +529,11 @@ A TestRes containing the F statistic and the P-value for the alternative
 
 
 <dd>Same as fTest, except that this test does not require the assumption of
- equal variances.  In exchange it's slightly less powerful.
+equal variances.  In exchange it's slightly less powerful.
 <br><br>
 <b>References:</b><br>
 B.L. Welch. On the Comparison of Several Mean Values: An Alternative Approach
- Biometrika, Vol. 38, No. 3/4 (Dec., 1951), pp. 330-336.<br><br>
+Biometrika, Vol. 38, No. 3/4 (Dec., 1951), pp. 330-336.<br><br>
 
 </dd>
 
@@ -820,18 +823,18 @@ A TestRes with the proportion of elements of before that were
 
 
 <dd>Two-sided binomial test for whether P(success) == <span class="funcparam">p</span>.  The one-sided
- alternatives are covered by dstats.distrib.binomialCDF and binomialCDFR.
- <span class="funcparam">k</span> is the number of successes observed, <span class="funcparam">n</span> is the number of trials, <span class="funcparam">p</span>
- is the probability of success under the <b>null</b>.
+alternatives are covered by dstats.distrib.binomialCDF and binomialCDFR.
+<span class="funcparam">k</span> is the number of successes observed, <span class="funcparam">n</span> is the number of trials, <span class="funcparam">p</span>
+is the probability of success under the <b>null</b>.
 <br><br>
 <b>Returns:</b><br>
 The P-value for the alternative that P(success) != <span class="funcparam">p</span> against
- the <b>null</b> that P(success) == <span class="funcparam">p</span>.
+the <b>null</b> that P(success) == <span class="funcparam">p</span>.
 
 <br><br>
 <b>Notes:</b><br>
-This test can also be performed using multinomialTest(), but this
- implementation is much faster and easier to use.<br><br>
+This test can also be performed using multinomialTest, but this
+implementation is much faster and easier to use.<br><br>
 
 </dd>
 
@@ -890,43 +893,39 @@ This test can also be performed using multinomialTest(), but this
 
 
 <dd>Performs a one-way Pearson's chi-square goodness of fit test between a range
- of observed and a range of expected values.  This is a useful statistical
- test for testing whether a set of observations fits a discrete distribution.
+of observed and a range of expected values.  This is a useful statistical
+test for testing whether a set of observations fits a discrete distribution.
 <br><br>
 <b>Returns:</b><br>
 A TestRes of the chi-square statistic and the P-value for the
- alternative hypothesis that observed is not a sample from expected against
- the <b>null</b> that observed is a sample from expected.
+alternative hypothesis that observed is not a sample from expected against
+the <b>null</b> that observed is a sample from expected.
 
 <br><br>
 <b>Notes:</b><br>
 By default, expected is assumed to be a range of expected proportions.
- These proportions are automatically normalized, and can sum to any number.
- By passing Expected.count in as the last parameter, calculating expected
- counts will be skipped, and expected will assume to already be properly
- normalized.  This is slightly faster, but more importantly
- allows input ranges to be used.
+These proportions are automatically normalized, and can sum to any number.
+By passing Expected.count in as the last parameter, calculating expected
+counts will be skipped, and expected will assume to already be properly
+normalized.  This is slightly faster, but more importantly
+allows input ranges to be used.
 <br><br>
 
- The chi-square test relies on asymptotic statistical properties
- and is therefore not considered valid, as a rule of thumb,  when expected
- counts are below 5.  However, this rule is likely to be unnecessarily
- stringent in most cases.
-<br><br>
-
- This is, for all practical purposes, an inherently non-directional test.
- Therefore, the one-sided verses two-sided option is not provided.
+The chi-square test relies on asymptotic statistical properties
+and is therefore not considered valid, as a rule of thumb,  when expected
+counts are below 5.  However, this rule is likely to be unnecessarily
+stringent in most cases.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=green>// Test to see whether a set of categorical observations differs
-</font> <font color=green>// statistically from a discrete uniform distribution.
+<pre class="d_code"><font color=green>// Test to see whether a set of categorical observations differs
+</font><font color=green>// statistically from a discrete uniform distribution.
 </font>
- <font color=blue>uint</font>[] observed = [980, 1028, 1001, 964, 1102];
- <font color=blue>auto</font> expected = repeat(1.0);
- <font color=blue>auto</font> res2 = <u>chiSquareFit</u>(observed, expected);
- <font color=blue>assert</font>(approxEqual(res2, 0.0207));
- <font color=blue>assert</font>(approxEqual(res2.testStat, 11.59));
+<font color=blue>uint</font>[] observed = [980, 1028, 1001, 964, 1102];
+<font color=blue>auto</font> expected = repeat(1.0);
+<font color=blue>auto</font> res2 = <u>chiSquareFit</u>(observed, expected);
+<font color=blue>assert</font>(approxEqual(res2, 0.0207));
+<font color=blue>assert</font>(approxEqual(res2.testStat, 11.59));
 </pre>
 
 <br><br>
@@ -971,20 +970,20 @@ By default, expected is assumed to be a range of expected proportions.
 
 
 <dd>The exact multinomial goodness of fit test for whether a set of counts
- fits a hypothetical distribution.  counts is an input range of counts.
- proportions is an input range of expected proportions.  These are normalized
- automatically, so they can sum to any value.
+fits a hypothetical distribution.  counts is an input range of counts.
+proportions is an input range of expected proportions.  These are normalized
+automatically, so they can sum to any value.
 <br><br>
 <b>Returns:</b><br>
 The P-value for the <b>null</b> that counts is a sample from proportions
- against the alternative that it isn't.
+against the alternative that it isn't.
 
 <br><br>
 <b>Notes:</b><br>
 This test is EXTREMELY slow for anything but very small samples and
- degrees of freedom.  The Pearson's chi-square (chiSquareFit()) or likelihood
- ratio chi-square (gTestFit()) are good enough approximations unless sample
- size is very small.<br><br>
+degrees of freedom.  The Pearson's chi-square (chiSquareFit()) or likelihood
+ratio chi-square (gTestFit()) are good enough approximations unless sample
+size is very small.<br><br>
 
 </dd>
 
@@ -999,41 +998,48 @@ This test is EXTREMELY slow for anything but very small samples and
 
 
 <dd>Performs a Pearson's chi-square test on a contingency table of arbitrary
- dimensions.  When the chi-square test is mentioned, this is usually the one
- being referred to.  Takes a set of finite forward ranges, one for each column
- in the contingency table.  These can be expressed either as a tuple of ranges
- or a range of ranges.  Returns a P-value for the alternative hypothesis that
- frequencies in each row of the contingency table depend on the column against
- the <b>null</b> that they don't.
+dimensions.  When the chi-square test is mentioned, this is usually the one
+being referred to.  Takes a set of finite forward ranges, one for each column
+in the contingency table.  These can be expressed either as a tuple of ranges
+or a range of ranges.  Returns a P-value for the alternative hypothesis that
+frequencies in each row of the contingency table depend on the column against
+the <b>null</b> that they don't.
 <br><br>
 <b>Notes:</b><br>
 The chi-square test relies on asymptotic statistical properties
- and is therefore not exact.  The typical rule of thumb is that each cell
- should have an expected value of at least 5.  However, this is likely to
- be unnecessarily stringent.
+and is therefore not exact.  The typical rule of thumb is that each cell
+should have an expected value of at least 5.  However, this is likely to
+be unnecessarily stringent.
 <br><br>
 
- Yates's continuity correction is never used in this implementation.  If
- you want something that's guaranteed to be conservative, use fisherExact().
+Yates's continuity correction is never used in this implementation.  If
+you want something that's guaranteed to be conservative, use fisherExact().
 <br><br>
 
- This is, for all practical purposes, an inherently non-directional test.
- Therefore, the one-sided verses two-sided option is not provided.
+This is, for all practical purposes, an inherently non-directional test.
+Therefore, the one-sided verses two-sided option is not provided.
 <br><br>
 
- For 2x2 contingency tables, fisherExact is a more conservative test, in that
- the type I error rate is guaranteed to never be above the nominal P-value.
- However, even for small sample sizes this test may produce results closer
- to the <b>true</b> P-value, at the risk of possibly being non-conservative.
+For 2x2 contingency tables, fisherExact is a more conservative test, in that
+the type I error rate is guaranteed to never be above the nominal P-value.
+However, even for small sample sizes this test may produce results closer
+to the <b>true</b> P-value, at the risk of possibly being non-conservative.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=green>// Test to see whether the relative frequency of outcome 0, 1, and 2
-</font> <font color=green>// depends on the treatment in some hypothetical experiment.
-</font> <font color=blue>uint</font>[] drug1 = [1000, 2000, 1500];
- <font color=blue>uint</font>[] drug2 = [1500, 3000, 2300];
- <font color=blue>uint</font>[] placebo = [500, 1100, 750];
- <font color=blue>assert</font>(approxEqual(<u>chiSquareContingency</u>(drug1, drug2, placebo), 0.2397));
+<pre class="d_code"><font color=green>// Test to see whether the relative frequency of outcome 0, 1, and 2
+</font><font color=green>// depends on the treatment (drug1, drug2 or placebo) in some hypothetical
+</font><font color=green>// experiment.  For example, 1500 people had outcome 2 if they were treated
+</font><font color=green>// with drug1 and 1100 had outcome 1 if treated with placebo.
+</font><font color=blue>uint</font>[] drug1 = [1000, 2000, 1500];
+<font color=blue>uint</font>[] drug2 = [1500, 3000, 2300];
+<font color=blue>uint</font>[] placebo = [500, 1100, 750];
+<font color=blue>auto</font> result1 = <u>chiSquareContingency</u>(drug1, drug2, placebo);
+
+<font color=green>// The following uses a range of ranges instead of an array of ranges,
+</font><font color=green>// and will produce equivalent results.
+</font><font color=blue>auto</font> rangeOfRanges = [drug1, drug2, placebo];
+<font color=blue>auto</font> result2 = <u>chiSquareContingency</u>(rangeOfRanges);
 </pre>
 
 <br><br>
@@ -1055,8 +1061,8 @@ The chi-square test relies on asymptotic statistical properties
 
 
 <dd>This struct is a subtype of TestRes and is used to return the results of
-gTestContingency.  Due to the information theoretic interpretation of
-the G test, it contains an extra field to return the mutual information
+gTestContingency and gTestObs.  Due to the information theoretic interpretation
+of the G test, it contains an extra field to return the mutual information
 in bits.<br><br>
 
 
@@ -1143,10 +1149,10 @@ the mutual information for use in information theoretic settings.
 the <b>null</b> hypothesis that values in x are independent of the corresponding
 values in y.  This is done using Pearson's Chi-Square Test.  For a similar test
 that assumes the data has already been tabulated into a contingency table, see
-chiSquareContingency().
+chiSquareContingency.
 <br><br>
-x and y must both be input ranges.  If they are not the same length, an
-exception is thrown.
+x and y must both be input ranges.  If they are not the same length, a
+DstatsArgumentException is thrown.
 
 <br><br>
 <b>Examples:</b><br>
@@ -1155,6 +1161,16 @@ exception is thrown.
 </font><font color=blue>auto</font> x = [<font color=red>"foo"</font>, <font color=red>"bar"</font>, <font color=red>"bar"</font>, <font color=red>"foo"</font>, <font color=red>"foo"</font>];
 <font color=blue>auto</font> y = [<font color=red>"xxx"</font>, <font color=red>"baz"</font>, <font color=red>"baz"</font>, <font color=red>"xxx"</font>, <font color=red>"baz"</font>];
 <font color=blue>auto</font> result = <u>chiSquareObs</u>(x, y);
+
+<font color=green>// This is equivalent to:
+</font><font color=blue>auto</font> contingency = <font color=blue>new</font> <font color=blue>uint</font>[][](2, 2);
+<font color=blue>foreach</font>(i; 0..x.length) {
+    <font color=blue>immutable</font> index1 = (x[i] == <font color=red>"foo"</font>);
+    <font color=blue>immutable</font> index2 = (y[i] == <font color=red>"xxx"</font>);
+    contingency[index1][index2]++;
+}
+
+<font color=blue>auto</font> result2 = chiSquareContingency(contingency);
 </pre>
 <br><br>
 
@@ -1170,11 +1186,11 @@ exception is thrown.
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Given two vectors of observations of jointly distributed variables x, y, tests
+<dd>Given two ranges of observations of jointly distributed variables x, y, tests
 the <b>null</b> hypothesis that values in x are independent of the corresponding
 values in y.  This is done using the Likelihood Ratio G test.  Usage is similar
 to chiSquareObs.  For an otherwise identical test that assumes the data has
-already been tabulated into a contingency table, see gTestContingency().
+already been tabulated into a contingency table, see gTestContingency.
 <br><br>
 <b>Note:</b><br>
 This test can be thought of as a test for nonzero mutual information
@@ -1196,34 +1212,34 @@ the mutual information for use in information theoretic settings.<br><br>
 
 
 <dd>Fisher's Exact test for difference in odds between rows/columns
- in a 2x2 contingency table.  Specifically, this function tests the odds
- ratio, which is defined, for a contingency table c, as (c[0][0] * c[1][1])
-  / (c[1][0] * c[0][1]).  Alternatives are Alt.less, meaning <b>true</b> odds ratio
- &lt; 1, Alt.greater, meaning <b>true</b> odds ratio &gt; 1, and Alt.twoSided, meaning
- <b>true</b> odds ratio != 1.
+in a 2x2 contingency table.  Specifically, this function tests the odds
+ratio, which is defined, for a contingency table c, as (c[0][0] * c[1][1])
+ / (c[1][0] * c[0][1]).  Alternatives are Alt.less, meaning <b>true</b> odds ratio
+&lt; 1, Alt.greater, meaning <b>true</b> odds ratio &gt; 1, and Alt.twoSided, meaning
+<b>true</b> odds ratio != 1.
 <br><br>
 Accepts a 2x2 contingency table as an array of arrays of uints.
- For now, only does 2x2 contingency tables.
+For now, only does 2x2 contingency tables.
 
 <br><br>
 <b>Notes:</b><br>
 Although this test is "exact" in that it does not rely on asymptotic
- approximations, it is very statistically conservative when the marginals
- are not truly fixed in the experimental design in question.  If a
- closer but possibly non-conservative approximation of the <b>true</b> P-value is
- desired, Pearson's chi-square test (chiSquareContingency) may perform better,
- even for small samples.
+approximations, it is very statistically conservative when the marginals
+are not truly fixed in the experimental design in question.  If a
+closer but possibly non-conservative approximation of the <b>true</b> P-value is
+desired, Pearson's chi-square test (chiSquareContingency) may perform better,
+even for small samples.
 
 <br><br>
 <b>Returns:</b><br>
 A TestRes of the odds ratio and the P-value against the given
- alternative.
+alternative.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>double</font> res = <u>fisherExact</u>([[2u, 7], [8, 2]], Alt.less);
- <font color=blue>assert</font>(approxEqual(res.p, 0.01852));  <font color=green>// Odds ratio is very small in this case.
-</font> <font color=blue>assert</font>(approxEqual(res.testStat, 4.0 / 56.0));
+<pre class="d_code"><font color=blue>double</font> res = <u>fisherExact</u>([[2u, 7], [8, 2]], Alt.less);
+<font color=blue>assert</font>(approxEqual(res.p, 0.01852));  <font color=green>// Odds ratio is very small in this case.
+</font><font color=blue>assert</font>(approxEqual(res.testStat, 4.0 / 56.0));
 </pre>
 
 <br><br>
@@ -1245,7 +1261,7 @@ A TestRes of the odds ratio and the P-value against the given
 
 
 <dd>Convenience function.  Converts a dynamic array to a static one, then
- calls the overload.<br><br>
+calls the overload.<br><br>
 
 </dd>
 
@@ -1260,15 +1276,15 @@ A TestRes of the odds ratio and the P-value against the given
 
 
 <dd>Performs a Kolmogorov-Smirnov (K-S) 2-sample test.  The K-S test is a
- non-parametric test for a difference between two empirical distributions or
- between an empirical distribution and a reference distribution.
+non-parametric test for a difference between two empirical distributions or
+between an empirical distribution and a reference distribution.
 <br><br>
 <b>Returns:</b><br>
 A TestRes with the K-S D value and a P value for the <b>null</b> that
- FPrime is distributed identically to F against the alternative that it isn't.
- This implementation uses a signed D value to indicate the direction of the
- difference between distributions.  To get the D value used in standard
- notation, simply take the absolute value of this D value.
+FPrime is distributed identically to F against the alternative that it isn't.
+This implementation uses a signed D value to indicate the direction of the
+difference between distributions.  To get the D value used in standard
+notation, simply take the absolute value of this D value.
 
 <br><br>
 <font color=red>BUGS:</font><br>
@@ -1292,16 +1308,15 @@ Exact calculation not implemented.  Uses asymptotic approximation.
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>One-sample KS test against a reference distribution, doesn't modify input
- data.  Takes a function pointer or delegate for the CDF of refernce
- distribution.
+<dd>One-sample Kolmogorov-Smirnov test against a reference distribution.
+Takes a callable object for the CDF of refernce distribution.
 <br><br>
 <b>Returns:</b><br>
-A TestRes with the K-S D value and a P value for the <b>null</b> that
- Femp is a sample from F against the alternative that it isn't. This
- implementation uses a signed D value to indicate the direction of the
- difference between distributions.  To get the D value used in standard
- notation, simply take the absolute value of this D value.
+A TestRes with the Kolmogorov-Smirnov D value and a P value for the
+<b>null</b> that Femp is a sample from F against the alternative that it isn't. This
+implementation uses a signed D value to indicate the direction of the
+difference between distributions.  To get the D value used in standard
+notation, simply take the absolute value of this D value.
 
 <br><br>
 <font color=red>BUGS:</font><br>
@@ -1309,9 +1324,9 @@ Exact calculation not implemented.  Uses asymptotic approximation.
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code"> <font color=blue>auto</font> stdNormal = parametrize!(normalCDF)(0.0, 1.0);
- <font color=blue>auto</font> empirical = [1, 2, 3, 4, 5];
- <font color=blue>double</font> res = <u>ksTest</u>(empirical, stdNormal);
+<pre class="d_code"><font color=blue>auto</font> stdNormal = parametrize!(normalCDF)(0.0, 1.0);
+<font color=blue>auto</font> empirical = [1, 2, 3, 4, 5];
+<font color=blue>auto</font> res = <u>ksTest</u>(empirical, stdNormal);
 </pre>
 
 <br><br>
@@ -1361,22 +1376,22 @@ Exact calculation not implemented.  Uses asymptotic approximation.
 
 
 <dd>Wald-wolfowitz or runs test for randomness of the distribution of
- elements for which positive() evaluates to <b>true</b>.  For example, given
- a sequence of coin flips [H,H,H,H,H,T,T,T,T,T] and a positive() function of
- "a == 'H'", this test would determine that the heads are non-randomly
- distributed, since they are all at the beginning of obs.  This is done
- by counting the number of runs of consecutive elements for which
- positive() evaluates to <b>true</b>, and the number of consecutive runs for which
- it evaluates to <b>false</b>.  In the example above, we have 2 runs.  These are the
- block of 5 consecutive heads at the beginning and the 5 consecutive tails
- at the end.
+elements for which positive() evaluates to <b>true</b>.  For example, given
+a sequence of coin flips [H,H,H,H,H,T,T,T,T,T] and a positive() function of
+"a == 'H'", this test would determine that the heads are non-randomly
+distributed, since they are all at the beginning of obs.  This is done
+by counting the number of runs of consecutive elements for which
+positive() evaluates to <b>true</b>, and the number of consecutive runs for which
+it evaluates to <b>false</b>.  In the example above, we have 2 runs.  These are the
+block of 5 consecutive heads at the beginning and the 5 consecutive tails
+at the end.
 <br><br>
 Alternatives are Alt.less, meaning that less runs than expected have been
- observed and data for which positive() is <b>true</b> tends to cluster,
- Alt.greater, which means that more runs than expected have been observed
- and data for which positive() is <b>true</b> tends to not cluster even moreso than
- expected by chance, and Alt.twoSided, meaning that elements for which
- positive() is <b>true</b> cluster as much as expected by chance.
+observed and data for which positive() is <b>true</b> tends to cluster,
+Alt.greater, which means that more runs than expected have been observed
+and data for which positive() is <b>true</b> tends to not cluster even moreso than
+expected by chance, and Alt.twoSided, meaning that elements for which
+positive() is <b>true</b> cluster as much as expected by chance.
 
 <br><br>
 <font color=red>BUGS:</font><br>
@@ -1401,7 +1416,7 @@ No exact calculation of the P-value.  Asymptotic approximation only.
 
 
 <dd>Runs test as in runsTest(), except calculates online instead of from stored
- array elements.<br><br>
+array elements.<br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -1461,14 +1476,14 @@ No exact calculation of the P-value.  Asymptotic approximation only.
 
 
 <dd>Tests the hypothesis that the Pearson correlation between two ranges is
- different from some 0.  Alternatives are
- Alt.less (pearsonCor(range1, range2) &lt; 0), Alt.greater (pearsonCor(range1, range2)
- &gt; 0) and Alt.twoSided (pearsonCor(range1, range2) != 0).
+different from some 0.  Alternatives are Alt.less
+(pearsonCor(range1, range2) &lt; 0), Alt.greater (pearsonCor(range1, range2)
+ 0) and Alt.twoSided (pearsonCor(range1, range2) != 0).
 <br><br>
 <b>Returns:</b><br>
 A ConfInt of the estimated Pearson correlation of the two ranges,
- the P-value against the given alternative, and the confidence interval of
- the correlation at the level specified by confLevel.
+the P-value against the given alternative, and the confidence interval of
+the correlation at the level specified by confLevel.
 
 <br><br>
 <b>References:</b><br>
@@ -1483,17 +1498,16 @@ A ConfInt of the estimated Pearson correlation of the two ranges,
 <span class="currsymbol">pearsonCorTest</span>
 <script>explorer.outline.addDecl('pearsonCorTest');</script>
 
-(T)(double <span class="funcparam">cor</span>, T <span class="funcparam">N</span>, Alt <span class="funcparam">alt</span> = Alt.twoSided, double <span class="funcparam">confLevel</span> = 0.95);
+()(double <span class="funcparam">cor</span>, double <span class="funcparam">N</span>, Alt <span class="funcparam">alt</span> = Alt.twoSided, double <span class="funcparam">confLevel</span> = 0.95);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Same as overload, but uses pre-computed correlation coefficient and sample
- size instead of computing them.
+size instead of computing them.
 <br><br>
 <b>Note:</b><br>
-T must be a numeric type.  The only reason this is a template and
- not a plain old function is DMD bug 2972.<br><br>
+This is a template only because of DMD Bug 2972.<br><br>
 
 </dd>
 
@@ -1508,20 +1522,20 @@ T must be a numeric type.  The only reason this is a template and
 
 
 <dd>Tests the hypothesis that the Spearman correlation between two ranges is
- different from some 0.  Alternatives are
- Alt.less (spearmanCor(range1, range2) &lt; 0), Alt.greater (spearmanCor(range1, range2)
- &gt; 0) and Alt.twoSided (spearmanCor(range1, range2) != 0).
+different from some 0.  Alternatives are
+Alt.less (spearmanCor(range1, range2) &lt; 0), Alt.greater (spearmanCor(range1, range2)
+&gt; 0) and Alt.twoSided (spearmanCor(range1, range2) != 0).
 <br><br>
 <b>Returns:</b><br>
 A TestRes containing the Spearman correlation coefficient and
- the P-value for the given alternative.
+the P-value for the given alternative.
 
 <br><br>
 <font color=red>BUGS:</font><br>
 Exact P-value computation not yet implemented.  Uses asymptotic
- approximation only.  This is good enough for most practical purposes given
- reasonably large N, but is not perfectly accurate.  Not valid for data with
- very large amounts of ties.  <br><br>
+approximation only.  This is good enough for most practical purposes given
+reasonably large N, but is not perfectly accurate.  Not valid for data with
+very large amounts of ties.<br><br>
 
 </dd>
 
@@ -1536,29 +1550,29 @@ Exact P-value computation not yet implemented.  Uses asymptotic
 
 
 <dd>Tests the hypothesis that the Kendall Tau-b between two ranges is
- different from some 0.  Alternatives are
- Alt.less (kendallCor(range1, range2) &lt; 0), Alt.greater (kendallCor(range1, range2)
- &gt; 0) and Alt.twoSided (kendallCor(range1, range2) != 0).
+different from 0.  Alternatives are Alt.less (kendallCor(range1, range2) &lt; 0),
+Alt.greater (kendallCor(range1, range2) &gt; 0) and Alt.twoSided
+(kendallCor(range1, range2) != 0).
 <br><br>
 exactThresh controls the maximum length of the range for which exact P-value
- computation is used.  The default is 50.  Exact calculation is never used
- when ties are present because it is not computationally feasible.
- Do not set this higher than 100, as it will be very slow
- and the asymptotic approximation is pretty good at even a fraction of this
- size.
+computation is used.  The default is 50.  Exact calculation is never used
+when ties are present because it is not computationally feasible.
+Do not set this higher than 100, as it will be very slow
+and the asymptotic approximation is pretty good at even a fraction of this
+size.
 
 <br><br>
 <b>Returns:</b><br>
 A TestRes containing the Kendall correlation coefficient and
- the P-value for the given alternative.
+the P-value for the given alternative.
 
 <br><br>
 <b>References:</b><br>
 StackOverflow Question 948341 (http://stackoverflow.com/questions/948341)
 <br><br>
 
- The Variance of Tau When Both Rankings Contain Ties.  M.G. Kendall.
- Biometrika, Vol 34, No. 3/4 (Dec., 1947), pp. 297-298<br><br>
+The Variance of Tau When Both Rankings Contain Ties.  M.G. Kendall.
+Biometrika, Vol 34, No. 3/4 (Dec., 1947), pp. 297-298<br><br>
 
 </dd>
 
@@ -1652,7 +1666,8 @@ Fisher, R. A. (1948) "Combining independent tests of
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Assume that dependency among hypotheses may exist.  (More conservative.)<br><br>
+<dd>Assume that dependency among hypotheses may exist.  (More conservative,
+    Benjamini-Yekutieli procedure.<br><br>
 
 </dd>
 
@@ -1665,7 +1680,8 @@ Fisher, R. A. (1948) "Combining independent tests of
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Assume hypotheses are independent.  (Less conservative.)<br><br>
+<dd>Assume hypotheses are independent.  (Less conservative, Benjamine-
+    Hochberg procedure.)<br><br>
 
 </dd>
 </dl>
@@ -1685,24 +1701,24 @@ Fisher, R. A. (1948) "Combining independent tests of
 
 
 <dd>Computes the <b>false</b> discovery rate statistic given a list of
- p-values, according to Benjamini and Hochberg (1995) (independent) or
- Benjamini and Yekutieli (2001) (dependent).  The Dependency parameter
- controls whether hypotheses are assumed to be independent, or whether
- the more conservative assumption that they are correlated must be made.
+p-values, according to Benjamini and Hochberg (1995) (independent) or
+Benjamini and Yekutieli (2001) (dependent).  The Dependency parameter
+controls whether hypotheses are assumed to be independent, or whether
+the more conservative assumption that they are correlated must be made.
 <br><br>
 <b>Returns:</b><br>
 An array of adjusted P-values with indices corresponding to the order of
- the P-values in the input data.
+the P-values in the input data.
 
 <br><br>
 <b>References:</b><br>
 Benjamini, Y., and Hochberg, Y. (1995). Controlling the <b>false</b> discovery rate:
- a practical and powerful approach to multiple testing. Journal of the Royal
- Statistical Society Series B, 57, 289-200
+a practical and powerful approach to multiple testing. Journal of the Royal
+Statistical Society Series B, 57, 289-200
 <br><br>
 
- Benjamini, Y., and Yekutieli, D. (2001). The control of the <b>false</b> discovery
- rate in multiple testing under dependency. Annals of Statistics 29, 1165-1188.<br><br>
+Benjamini, Y., and Yekutieli, D. (2001). The control of the <b>false</b> discovery
+rate in multiple testing under dependency. Annals of Statistics 29, 1165-1188.<br><br>
 
 </dd>
 
@@ -1766,7 +1782,7 @@ Holm, S. (1979). A simple sequentially rejective multiple test procedure.
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Aug 18 21:40:08 2011
+			on Sun Nov  6 11:27:31 2011
 
 		</td></tr>
 	</table>
