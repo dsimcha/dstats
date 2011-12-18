@@ -476,6 +476,11 @@ as the number of vectors in mat and must have at least enough columns in
 each row to support storing the lower triangle.  If ans is a full rectangular
 matrix/range of ranges, only the lower triangle results will be stored.
 <br><br>
+<b>Note:</b><br>
+These functions can be used without SciD because they don't return
+       SciD types.
+
+<br><br>
 <b>Examples:</b><br>
 <pre class="d_code"><font color=blue>auto</font> pearsonRoR = [[0.0], [0.0, 0.0], [0.0, 0.0, 0.0]];
 <u>pearsonMatrix</u>(input, pearsonRoR);
@@ -492,7 +497,7 @@ matrix/range of ranges, only the lower triangle results will be stored.
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Dec 15 20:40:32 2011
+			on Sat Dec 17 20:19:23 2011
 
 		</td></tr>
 	</table>
