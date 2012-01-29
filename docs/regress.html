@@ -894,6 +894,243 @@ Issue 2, 28 August 2002, Pages 253-262
 //en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula<br><br>
 
 </dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">Loess1D 
+<span class="currsymbol">loess1D</span>
+<script>explorer.outline.addDecl('loess1D');</script>
+
+(RX, RY)(RY <span class="funcparam">y</span>, RX <span class="funcparam">x</span>, double <span class="funcparam">span</span>, int <span class="funcparam">degree</span> = 1);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>This function performs loess regression.  Loess regression is a local
+regression procedure, where a prediction of the dependent (y) variable
+is made from an observation of the independent (x) variable by weighted
+least squares over x values in the neighborhood of the value being evaluated.
+<br><br>
+In the future a separate function may be included to perform loess regression
+with multiple predictors.  However, one predictor is the much more common
+case and the multiple predictor case will require a much different API
+and implementation, so for now only one predictor is supported.
+
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">y</td>
+
+               
+<td>Observations of the dependent variable.</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">x</td>
+
+               
+<td>Observations of the independent variable.</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">span</td>
+
+               
+<td>The fraction of x observations considered to be "in the neighborhood"
+         when performing local regression to predict the y value for a new x.
+         For example, if 8 observations are provided and span == 0.5,
+         the 4 nearest neighbors will be used on evaluation.</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">degree</td>
+
+               
+<td>The polynomial degree of the local regression.  Must be less than
+         the number of neighbors (span * x.length).</td></tr>
+</table><br>
+<b>Returns:</b><br>
+A Loess1D object.  This object can be used to make predictions based on
+the loess model.  The computations involved are done lazily, i.e. this
+function sets up the Loess1D instance and returns without computing
+any regression models.
+
+<br><br>
+<b>Examples:</b><br>
+<pre class="d_code"><font color=blue>auto</font> x = [1, 2, 3, 4, 5, 6, 7];
+<font color=blue>auto</font> y = [3, 6, 2, 4, 3, 6, 8];
+
+<font color=green>// Build the Loess1D object.
+</font><font color=blue>auto</font> model = <u>loess1D</u>(y, x, 0.5);
+
+<font color=green>// Compute the weights for robust regression.
+</font>model.computeRobustWeights(2);
+
+<font color=green>// Predict the value of y when x == 5.5, using a robustness level of 2.
+</font><font color=blue>auto</font> prediction = model.predict(5.5, 2);
+</pre>
+
+<br><br>
+<b>References:</b><br>
+Cleveland, W.S. (1979). "Robust Locally Weighted Regression and Smoothing
+Scatterplots". Journal of the American Statistical Association 74 (368):
+829-836.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">class 
+<span class="currsymbol">Loess1D</span>
+<script>explorer.outline.addDecl('Loess1D');</script>
+
+;
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>This class is returned from the loess1D function and holds the state of a
+loess regression with one predictor variable.<br><br>
+
+
+<script>explorer.outline.incSymbolLevel();</script>
+<dl>
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const double 
+<span class="currsymbol">predict</span>
+<script>explorer.outline.addDecl('predict');</script>
+
+(double <span class="funcparam">point</span>, int <span class="funcparam">robustness</span> = 0);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Predict the value of y when x == <span class="funcparam">point</span>, using <span class="funcparam">robustness</span> iterations
+    of the biweight procedure outlined in the reference to make the
+    estimates more robust.
+<br><br>
+<b>Notes:</b><br>
+This function is computationally intensive but may be called
+    from multiple threads simultaneously.  When predicting a
+    large number of points, a parallel foreach loop may be used.
+<br><br>
+
+    Before calling this function with <span class="funcparam">robustness</span> &gt; 0,
+    computeRobustWeights() must be called.  See this function for details.
+
+<br><br>
+<b>Returns:</b><br>
+The predicted y value.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">computeRobustWeights</span>
+<script>explorer.outline.addDecl('computeRobustWeights');</script>
+
+(int <span class="funcparam">robustness</span>, TaskPool <span class="funcparam">pool</span> = null);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Compute the weights for robust loess, for all <span class="funcparam">robustness</span> levels &lt;= the
+    <span class="funcparam">robustness</span> parameter.  This computation is embarrassingly parallel, so if a
+    TaskPool is provided it will be parallelized.
+<br><br>
+This function must be called before calling predict() with a <span class="funcparam">robustness</span>
+    value &gt; 0.  
+<span class="currsymbol">computeRobustWeights</span>
+<script>explorer.outline.addDecl('computeRobustWeights');</script>
+
+() must be called with a <span class="funcparam">robustness</span> level
+    &gt;= the <span class="funcparam">robustness</span> level predict() is to be called with.  This is not
+    handled implicitly because 
+<span class="currsymbol">computeRobustWeights</span>
+<script>explorer.outline.addDecl('computeRobustWeights');</script>
+
+() is very computationally
+    intensive and because it modifies the state of the Loess1D object, while
+    predict() is const.  Forcing 
+<span class="currsymbol">computeRobustWeights</span>
+<script>explorer.outline.addDecl('computeRobustWeights');</script>
+
+() to be called explicitly
+    allows multiple instances of predict() to be evaluated in parallel.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const(double)[] 
+<span class="currsymbol">predictions</span>
+<script>explorer.outline.addDecl('predictions');</script>
+
+(int <span class="funcparam">robustness</span>, TaskPool <span class="funcparam">pool</span> = null);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Obtain smoothed 
+<span class="currsymbol">predictions</span>
+<script>explorer.outline.addDecl('predictions');</script>
+
+ of y at the values of x provided on creation
+    of this object, for the given level of <span class="funcparam">robustness</span>.  Evaluating
+    these is computationally expensive and may be parallelized by
+    providing a TaskPool object.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const const pure nothrow @property @safe int 
+<span class="currsymbol">degree</span>
+<script>explorer.outline.addDecl('degree');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>The polynomial 
+<span class="currsymbol">degree</span>
+<script>explorer.outline.addDecl('degree');</script>
+
+ for the local regression.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const const pure nothrow @property @safe const(double)[] 
+<span class="currsymbol">x</span>
+<script>explorer.outline.addDecl('x');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>The 
+<span class="currsymbol">x</span>
+<script>explorer.outline.addDecl('x');</script>
+
+ values provided on object creation.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">const const pure nothrow @property @safe const(double)[] 
+<span class="currsymbol">y</span>
+<script>explorer.outline.addDecl('y');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>The 
+<span class="currsymbol">y</span>
+<script>explorer.outline.addDecl('y');</script>
+
+ values provided on object creation.<br><br>
+
+</dd>
+</dl>
+<script>explorer.outline.decSymbolLevel();</script>
+
+
+</dd>
 </dl>
 <script>explorer.outline.decSymbolLevel();</script>
 
@@ -902,7 +1139,7 @@ Issue 2, 28 August 2002, Pages 253-262
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Dec 15 20:40:32 2011
+			on Sun Jan 29 12:41:19 2012
 
 		</td></tr>
 	</table>
