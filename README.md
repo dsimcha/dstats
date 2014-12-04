@@ -2,8 +2,8 @@ dstats
 ======
 
 A statistics library for D, emphasising a middle ground between performance and ease 
-of use. This repository is a fork of David Simcha's https://github.com/dsimcha/dstats
-created to bring the library up to date and enable dub support.
+of use. The library has recently been brought up-to-date and should work with recent
+D compilers.
 
 
 Building
